@@ -1,0 +1,41 @@
+name: DiffShield
+description: Analyze a checked-out pull request diff for exposed credentials, risky workflow changes, and sensitive files.
+author: GhosTnever-lkm
+branding:
+  icon: shield
+  color: blue
+inputs:
+  base-sha:
+    description: Full base commit SHA to compare against
+    required: true
+  head-sha:
+    description: Full head commit SHA to compare against
+    required: true
+  fail-on:
+    description: Minimum severity that fails the action (critical, high, medium, none)
+    required: false
+    default: high
+  max-findings:
+    description: Maximum number of findings to include in the summary
+    required: false
+    default: '100'
+outputs:
+  risk-score:
+    description: Heuristic risk score from 0 to 100
+    value: ${{ steps.scan.outputs.risk-score }}
+  findings-count:
+    description: Total number of findings
+    value: ${{ steps.scan.outputs.findings-count }}
+runs:
+  using: composite
+  steps:
+    - id: scan
+      shell: bash
+      env:
+        DIFFSHIELD_BASE_SHA: ${{ inputs.base-sha }}
+        DIFFSHIELD_HEAD_SHA: ${{ inputs.head-sha }}
+        DIFFSHIELD_FAIL_ON: ${{ inputs.fail-on }}
+        DIFFSHIELD_MAX_FINDINGS: ${{ inputs.max-findings }}
+      run: node "${{ github.action_path }}/src/scan.mjs"
+
+
