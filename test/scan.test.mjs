@@ -30,7 +30,8 @@ test('clean changes produce a zero-risk report', t => {
 });
 
 test('credential detection reports line without copying secret value into logs', t => {
-  const f = fixture({ 'src/config.js': 'export const key = "ghp_123456789012345678901234567890123456";\n' }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
+  const fake = ['ghp_', '123456789012345678901234567890123456'].join('');
+  const f = fixture({ 'src/config.js': `export const key = "${fake}";\n` }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
   assert.notEqual(f.result.status, 0); assert.equal(f.report.findings[0].severity, 'critical'); assert.equal(f.report.findings[0].line, 1);
   assert.doesNotMatch(f.result.stdout + f.result.stderr, /123456789012345678901234567890123456/);
 });
