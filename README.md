@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Analyze pull request changes
-        uses: GhosTnever-lkm/diffshield-action@v1
+        uses: GhosTnever-lkm/diffshield-action@ed6c7eedef8c77df131b03518f91c678a0c5686b # v1.0.0
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
           head-sha: ${{ github.event.pull_request.head.sha }}
@@ -74,3 +74,4 @@ MIT. See [LICENSE](LICENSE).
 Please report vulnerabilities privately through GitHub's **Report a vulnerability** feature. Do not publish working credentials in issues or pull requests.
 
 Risk score weights are fixed and visible in the source: critical 40, high 25, medium 10, low 3, capped at 100. The score is not a probability.
+

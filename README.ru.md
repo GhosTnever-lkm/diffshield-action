@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Analyze pull request changes
-        uses: GhosTnever-lkm/diffshield-action@v1
+        uses: GhosTnever-lkm/diffshield-action@ed6c7eedef8c77df131b03518f91c678a0c5686b # v1.0.0
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
           head-sha: ${{ github.event.pull_request.head.sha }}
@@ -68,3 +68,4 @@ node --test test/scan.test.mjs
 MIT. См. [LICENSE](LICENSE).
 
 Веса оценки указаны в исходном коде: critical — 40, high — 25, medium — 10, low — 3; максимум — 100. Это не вероятность.
+
