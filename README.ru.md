@@ -63,6 +63,22 @@ node --test test/scan.test.mjs
 
 Анализ workflow консервативный и построчный, без полноценного YAML-парсера. Проверяйте контекст каждого предупреждения. DiffShield не меняет файлы, не пишет комментарии и не запрашивает права на запись.
 
+## ☕ Поддержка / Pro-версия
+
+DiffShield бесплатен и имеет открытый исходный код. Платной Pro-версии пока нет. Поддержать GhosTnever можно на [Boosty](https://boosty.to/azizazimov) или [Buy Me a Coffee](https://www.buymeacoffee.com/azizazimov8).
+
+<details>
+<summary>Адреса криптовалютных кошельков</summary>
+
+Отправляйте только актив, предназначенный для указанной сети.
+
+| Сеть | Адрес |
+|---|---|
+| Bitcoin | `bc1qn75pj4n7gyl2k5kf2f97elvyenz52q6nn2g30u` |
+| TRON | `TCBSy38X57hA6w2onJcxom24x1febc1mP1` |
+| BNB Smart Chain | `0xD431a917961E0b086B96D9F72b5C8fF19b19068a` |
+
+</details>
 ## Лицензия
 
 MIT. См. [LICENSE](LICENSE).

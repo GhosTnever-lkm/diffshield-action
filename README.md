@@ -65,6 +65,22 @@ The secret checks cover private-key headers, common GitHub/AWS/Google/Slack/Stri
 
 Workflow review is intentionally conservative and line-based; it is not a full YAML parser. Review every warning in context. DiffShield does not alter files, create comments, request write permissions, or make a merge decision.
 
+## ☕ Support / Pro Version
+
+DiffShield is free and open source. There is no paid Pro edition at this time. You can support GhosTnever on [Boosty](https://boosty.to/azizazimov) or [Buy Me a Coffee](https://www.buymeacoffee.com/azizazimov8).
+
+<details>
+<summary>Cryptocurrency addresses</summary>
+
+Send only the named asset on its matching network.
+
+| Network | Address |
+|---|---|
+| Bitcoin | `bc1qn75pj4n7gyl2k5kf2f97elvyenz52q6nn2g30u` |
+| TRON | `TCBSy38X57hA6w2onJcxom24x1febc1mP1` |
+| BNB Smart Chain | `0xD431a917961E0b086B96D9F72b5C8fF19b19068a` |
+
+</details>
 ## License
 
 MIT. See [LICENSE](LICENSE).
