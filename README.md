@@ -81,6 +81,7 @@ Send only the named asset on its matching network.
 | BNB Smart Chain | `0xD431a917961E0b086B96D9F72b5C8fF19b19068a` |
 
 </details>
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

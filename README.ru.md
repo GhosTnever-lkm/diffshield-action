@@ -79,6 +79,7 @@ DiffShield бесплатен и имеет открытый исходный к
 | BNB Smart Chain | `0xD431a917961E0b086B96D9F72b5C8fF19b19068a` |
 
 </details>
+
 ## Лицензия
 
 MIT. См. [LICENSE](LICENSE).

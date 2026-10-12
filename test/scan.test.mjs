@@ -35,6 +35,7 @@ test('English and Russian README examples pin the same immutable Action release'
     const content = readFileSync(path.join(repository, name), 'utf8');
     const match = content.match(/uses:\s*GhosTnever-lkm\/diffshield-action@([a-f0-9]{40})\s+#\s*v(\d+\.\d+\.\d+)/);
     assert.ok(match, `${name} must show a full 40-character Action pin and release version`);
+    assert.match(content, /<\/details>\r?\n\r?\n## (License|Лицензия)/, `${name} must render its license heading after wallet details`);
     return { sha: match[1], version: match[2] };
   });
   assert.deepEqual(pins[0], pins[1], 'localized examples must use the same verified Action commit and version');
