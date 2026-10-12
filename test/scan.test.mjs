@@ -7,6 +7,7 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const scanner = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src/scan.mjs');
+const repository = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 function fixture(files, options = {}) {
   const dir = mkdtempSync(path.join(os.tmpdir(), 'diffshield-'));
   const git = (...args) => execFileSync('git', args, { cwd: dir, stdio: 'ignore' });
@@ -27,6 +28,16 @@ function fixture(files, options = {}) {
 test('clean changes produce a zero-risk report', t => {
   const f = fixture({ 'src/app.js': 'export const value = 42;\n' }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
   assert.equal(f.result.status, 0); assert.equal(f.report.riskScore, 0); assert.equal(f.report.findings.length, 0);
+});
+
+test('English and Russian README examples pin the same immutable Action release', () => {
+  const pins = ['README.md', 'README.ru.md'].map(name => {
+    const content = readFileSync(path.join(repository, name), 'utf8');
+    const match = content.match(/uses:\s*GhosTnever-lkm\/diffshield-action@([a-f0-9]{40})\s+#\s*v(\d+\.\d+\.\d+)/);
+    assert.ok(match, `${name} must show a full 40-character Action pin and release version`);
+    return { sha: match[1], version: match[2] };
+  });
+  assert.deepEqual(pins[0], pins[1], 'localized examples must use the same verified Action commit and version');
 });
 
 test('credential detection reports line without copying secret value into logs', t => {
