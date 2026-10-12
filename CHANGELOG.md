@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.4
+
+- Keep the report's tool version synchronized with `package.json` rather than a stale hard-coded value.
+- Add a regression assertion that verifies the generated report version matches package metadata.
+
 ## v1.0.3
 
 - Fix Markdown spacing so the license headings render correctly after the wallet details blocks in both README languages.

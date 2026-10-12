@@ -1,11 +1,12 @@
 import { execFileSync } from 'node:child_process';
-import { appendFileSync, writeFileSync } from 'node:fs';
+import { appendFileSync, readFileSync, writeFileSync } from 'node:fs';
 
 const SEVERITY = { critical: 4, high: 3, medium: 2, low: 1, info: 0 };
 const BASE = process.env.DIFFSHIELD_BASE_SHA ?? '';
 const HEAD = process.env.DIFFSHIELD_HEAD_SHA ?? '';
 const failOn = (process.env.DIFFSHIELD_FAIL_ON ?? 'high').toLowerCase();
 const maxFindings = Number.parseInt(process.env.DIFFSHIELD_MAX_FINDINGS ?? '100', 10);
+const packageVersion = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
 const findings = [];
 
 function add(severity, category, path, line, message, recommendation) {
@@ -151,7 +152,7 @@ function main() {
 
   const score = riskScore(findings);
   const counts = Object.fromEntries(Object.keys(SEVERITY).map(level => [level, findings.filter(item => item.severity === level).length]));
-  const report = { tool: 'DiffShield', version: '1.0.0', base: BASE, head: HEAD, riskScore: score, counts, findings };
+  const report = { tool: 'DiffShield', version: packageVersion, base: BASE, head: HEAD, riskScore: score, counts, findings };
   const summary = [];
   summary.push('## 🛡️ DiffShield analysis');
   summary.push('');
