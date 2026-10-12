@@ -28,6 +28,7 @@ function fixture(files, options = {}) {
 test('clean changes produce a zero-risk report', t => {
   const f = fixture({ 'src/app.js': 'export const value = 42;\n' }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
   assert.equal(f.result.status, 0); assert.equal(f.report.riskScore, 0); assert.equal(f.report.findings.length, 0);
+  assert.equal(f.report.version, JSON.parse(readFileSync(path.join(repository, 'package.json'), 'utf8')).version);
 });
 
 test('English and Russian README examples pin the same immutable Action release', () => {
