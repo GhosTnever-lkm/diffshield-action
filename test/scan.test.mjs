@@ -58,6 +58,16 @@ test('workflow issues are grouped and fail at the configured threshold', t => {
   assert.ok(f.report.findings.some(x => x.category === 'Workflow permissions'));
 });
 
+test('workflow script injection is detected with YAML block indentation indicators', t => {
+  for (const marker of ['|2-', '>+2']) {
+    const workflow = `name: test\non: pull_request\npermissions:\n  contents: read\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: ${marker}\n          echo \${{ github.event.pull_request.title }}\n`;
+    const f = fixture({ '.github/workflows/ci.yml': workflow });
+    t.after(() => rmSync(f.dir, { recursive: true, force: true }));
+    assert.notEqual(f.result.status, 0, `${marker} should fail at the default high threshold`);
+    assert.ok(f.report.findings.some(x => x.category === 'Workflow script injection'), `${marker} must inspect the shell block`);
+  }
+});
+
 test('documented placeholders do not trigger credential assignment heuristic', t => {
   const f = fixture({ '.env.example': 'API_KEY=YOUR_API_KEY_HERE\n', 'app.js': 'const password = "change_me_now";\n' }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
   assert.equal(f.report.findings.filter(x => x.category === 'Possible secret' || x.category === 'Sensitive file').length, 0);

@@ -79,7 +79,7 @@ function inspectWorkflow(file, text) {
   for (let i = 0; i < lines.length; i++) {
     const indentation = lines[i].match(/^\s*/)[0].length;
     const run = lines[i].match(/^(\s*)(?:-\s*)?run\s*:\s*(.*)$/i);
-    if (run) runBlockIndent = !run[2] || /^[|>][+-]?$/.test(run[2].trim()) ? run[1].length : null;
+    if (run) runBlockIndent = !run[2] || /^[|>](?:(?:[1-9][+-]?)|(?:[+-][1-9]?))?$/.test(run[2].trim()) ? run[1].length : null;
     else if (runBlockIndent !== null && lines[i].trim() && indentation <= runBlockIndent) runBlockIndent = null;
     const isRunCommand = Boolean(run) || runBlockIndent !== null;
     if (isRunCommand && /\$\{\{\s*github\.event\.(?:pull_request\.(?:title|body)|issue\.title|comment\.body)/i.test(lines[i])) {
