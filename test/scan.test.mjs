@@ -49,6 +49,15 @@ test('credential detection reports line without copying secret value into logs',
   assert.doesNotMatch(f.result.stdout + f.result.stderr, /123456789012345678901234567890123456/);
 });
 
+test('AWS secret access key assignments are detected without exposing the value', t => {
+  const fake = 'A'.repeat(40);
+  const variable = ['AWS', 'SECRET', 'ACCESS', 'KEY'].join('_');
+  const f = fixture({ '.env': `${variable}=${fake}\n` }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
+  assert.notEqual(f.result.status, 0);
+  assert.ok(f.report.findings.some(x => x.category === 'Possible secret' && x.message.includes('Credential-like assignment')));
+  assert.doesNotMatch(f.result.stdout + f.result.stderr + JSON.stringify(f.report), new RegExp(fake));
+});
+
 test('workflow issues are grouped and fail at the configured threshold', t => {
   const workflow = 'name: test\non: pull_request\njobs:\n  scan:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - run: |\n          echo ${{ github.event.pull_request.title }}\n';
   const f = fixture({ '.github/workflows/ci.yml': workflow }, { failOn: 'medium' }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
