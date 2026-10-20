@@ -51,7 +51,8 @@ test('credential detection reports line without copying secret value into logs',
 
 test('AWS secret access key assignments are detected without exposing the value', t => {
   const fake = 'A'.repeat(40);
-  const f = fixture({ '.env': `AWS_SECRET_ACCESS_KEY=${fake}\n` }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
+  const variable = ['AWS', 'SECRET', 'ACCESS', 'KEY'].join('_');
+  const f = fixture({ '.env': `${variable}=${fake}\n` }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
   assert.notEqual(f.result.status, 0);
   assert.ok(f.report.findings.some(x => x.category === 'Possible secret' && x.message.includes('Credential-like assignment')));
   assert.doesNotMatch(f.result.stdout + f.result.stderr + JSON.stringify(f.report), new RegExp(fake));
