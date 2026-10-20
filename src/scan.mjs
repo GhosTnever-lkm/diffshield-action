@@ -34,7 +34,7 @@ function secretPattern(line) {
   ];
   for (const [name, regex] of patterns) if (regex.test(line)) return name;
 
-  const assignment = line.match(/(?:password|passwd|secret|api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]\s*["']?([^\s"',;]{8,})/i);
+  const assignment = line.match(/(?:password|passwd|secret|aws[_-]?secret[_-]?access[_-]?key|api[_-]?key|access[_-]?token|client[_-]?secret)\s*[:=]\s*["']?([^\s"',;]{8,})/i);
   if (assignment && !isPlaceholder(assignment[1]) && !/^\$\{\{|^\$[A-Z_][A-Z0-9_]*$/i.test(assignment[1])) {
     return 'Credential-like assignment';
   }
