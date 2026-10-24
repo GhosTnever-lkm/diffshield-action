@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Analyze pull request changes
-        uses: GhosTnever-lkm/diffshield-action@32196393073bb48514a1ea75f3803a3345974fba # v1.0.1
+        uses: GhosTnever-lkm/diffshield-action@09834b2215cac582f93da7c5120279d018fcd8ce # v1.0.5
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
           head-sha: ${{ github.event.pull_request.head.sha }}
