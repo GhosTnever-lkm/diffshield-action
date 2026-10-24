@@ -1,6 +1,6 @@
 {
   "name": "diffshield-action",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "description": "Read-only GitHub pull request risk review action",
   "type": "module",

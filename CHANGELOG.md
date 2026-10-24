@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.5
+
+- Reject malformed, fractional, and out-of-range `max-findings` values instead of silently accepting the integer prefix.
+- Add regression coverage for invalid action configuration.
+
 ## v1.0.4
 
 - Keep the report's tool version synchronized with `package.json` rather than a stale hard-coded value.

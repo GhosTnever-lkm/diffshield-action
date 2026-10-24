@@ -5,7 +5,8 @@ const SEVERITY = { critical: 4, high: 3, medium: 2, low: 1, info: 0 };
 const BASE = process.env.DIFFSHIELD_BASE_SHA ?? '';
 const HEAD = process.env.DIFFSHIELD_HEAD_SHA ?? '';
 const failOn = (process.env.DIFFSHIELD_FAIL_ON ?? 'high').toLowerCase();
-const maxFindings = Number.parseInt(process.env.DIFFSHIELD_MAX_FINDINGS ?? '100', 10);
+const rawMaxFindings = process.env.DIFFSHIELD_MAX_FINDINGS ?? '100';
+const maxFindings = Number(rawMaxFindings);
 const packageVersion = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version;
 const findings = [];
 
@@ -125,7 +126,7 @@ function commandEscape(value) {
 function main() {
   if (!/^[a-f0-9]{40}$/i.test(BASE) || !/^[a-f0-9]{40}$/i.test(HEAD)) throw new Error('base-sha and head-sha must be full 40-character commit SHAs.');
   if (!Object.hasOwn(SEVERITY, failOn)) throw new Error('fail-on must be critical, high, medium, or none.');
-  if (!Number.isInteger(maxFindings) || maxFindings < 1 || maxFindings > 1000) throw new Error('max-findings must be an integer between 1 and 1000.');
+  if (!/^\d+$/.test(rawMaxFindings) || !Number.isInteger(maxFindings) || maxFindings < 1 || maxFindings > 1000) throw new Error('max-findings must be an integer between 1 and 1000.');
 
   const diff = git(['diff', '--no-ext-diff', '--no-renames', '--unified=0', BASE, HEAD, '--']);
   const files = parseDiff(diff);

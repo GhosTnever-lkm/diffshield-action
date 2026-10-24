@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -20,8 +20,9 @@ function fixture(files, options = {}) {
   }
   git('add', '-A'); git('commit', '-qm', 'head');
   const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: dir, encoding: 'utf8' }).trim();
-  const result = spawnSync(process.execPath, [scanner], { cwd: dir, encoding: 'utf8', env: { ...process.env, DIFFSHIELD_BASE_SHA: base, DIFFSHIELD_HEAD_SHA: head, DIFFSHIELD_FAIL_ON: options.failOn ?? 'high' } });
-  const report = JSON.parse(readFileSync(path.join(dir, 'diffshield-report.json'), 'utf8'));
+  const result = spawnSync(process.execPath, [scanner], { cwd: dir, encoding: 'utf8', env: { ...process.env, DIFFSHIELD_BASE_SHA: base, DIFFSHIELD_HEAD_SHA: head, DIFFSHIELD_FAIL_ON: options.failOn ?? 'high', ...(options.maxFindings === undefined ? {} : { DIFFSHIELD_MAX_FINDINGS: options.maxFindings }) } });
+  const reportPath = path.join(dir, 'diffshield-report.json');
+  const report = existsSync(reportPath) ? JSON.parse(readFileSync(reportPath, 'utf8')) : null;
   return { dir, result, report };
 }
 
@@ -80,4 +81,14 @@ test('workflow script injection is detected with YAML block indentation indicato
 test('documented placeholders do not trigger credential assignment heuristic', t => {
   const f = fixture({ '.env.example': 'API_KEY=YOUR_API_KEY_HERE\n', 'app.js': 'const password = "change_me_now";\n' }); t.after(() => rmSync(f.dir, { recursive: true, force: true }));
   assert.equal(f.report.findings.filter(x => x.category === 'Possible secret' || x.category === 'Sensitive file').length, 0);
+});
+
+test('max-findings rejects malformed, fractional, and out-of-range values', t => {
+  for (const value of ['2oops', '1.5', '0', '1001']) {
+    const f = fixture({ 'src/app.js': 'export const value = 42;\n' }, { maxFindings: value });
+    t.after(() => rmSync(f.dir, { recursive: true, force: true }));
+    assert.notEqual(f.result.status, 0, `${value} must be rejected`);
+    assert.match(f.result.stderr, /max-findings must be an integer between 1 and 1000/);
+    assert.equal(f.report, null, 'invalid configuration must not write a report');
+  }
 });
